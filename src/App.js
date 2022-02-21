@@ -1,24 +1,31 @@
-import logo from './logo.svg';
+import React, { useMemo, useReducer } from 'react';
+import { DECREMENT, INCREMENT } from './actionTypes';
 import './App.css';
+import Button from './Button';
+import Counter from './Counter';
+import countReducer from './reducer';
 
+export const AppContext = React.createContext();
 function App() {
+  const [state, dispatch] = useReducer(countReducer, 0);
+  const contextValue = useMemo(() => {
+    return { state, dispatch }
+  }, [state, dispatch]);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContext.Provider value={contextValue}>
+      <>
+        <div style={{ textAlign: "center", fontSize: "2rem" }}>
+
+          <Counter />
+          <Button type={INCREMENT} />
+          <Button type={DECREMENT} backgroundColor={"red"} />
+        </div>
+      </>
+
+    </AppContext.Provider>
+
   );
 }
 
